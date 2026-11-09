@@ -85,7 +85,7 @@ export function lesson(app) {
 	function show(s) {
 		const el = document.createElement('div');
 		el.className = 'lesson' + (s.fixed ? ' fixed' : '') + (s.dir ? ' ' + s.dir : '');
-		const hand = drawIcon('point', 34, { seed: 3 });
+		const hand = drawIcon('point', 22);
 		hand.className = 'hand';
 		const say = document.createElement('span');
 		say.className = 'say';

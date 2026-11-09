@@ -17,6 +17,7 @@ import { zip } from './zip.js?v=a8136959';
 import { lesson } from './lesson.js?v=a8136959';
 import { count } from './count.js?v=a8136959';
 import { retip } from './tips.js?v=a8136959';
+import { MODES, mode as toneMode, setMode, tone } from './tone.js?v=a8136959';
 
 const Q = new URLSearchParams(location.search);
 const TEST = Q.has('test');
@@ -158,7 +159,7 @@ class Painters {
 			const j = this.queue.shift() || this.next() || this.idle.shift();
 			if (!j) return;
 			s.job = j;
-			s.w.postMessage({ ...j.req, id: ++ids });
+			s.w.postMessage({ ...j.req, P: tone(j.req.P), id: ++ids });
 			if (j.limit) s.timer = setTimeout(() => this.kill(s), j.limit);
 		}
 	}
@@ -1735,6 +1736,15 @@ async function boot() {
 	if (g.root) { const [rx, ry] = pos(g.root.q, g.root.r); startWave(rx, ry); } else startWave();
 	painters = new Painters(poolSize(), next);
 	world.append(tools, tag);
+	// the tone switch in the bar: colour, grayscale, or black and white only (tone.js)
+	const tones = $('#tone');
+	for (const [m, label] of MODES) {
+		const b = document.createElement('button');
+		b.type = 'button'; b.textContent = label; b.dataset.tone = m;
+		b.setAttribute('aria-pressed', m === toneMode);
+		b.onclick = () => setMode(m);
+		tones.append(b);
+	}
 	paperize($('#bar'), { color: '#ffffff', edges: { top: 'cut', right: 'torn', bottom: 'torn', left: 'cut' }, seed: 11 });
 	// the arrows stay under the name, however tall what's in the bar makes it
 	new ResizeObserver(() => { $('#nav').style.top = $('#bar').getBoundingClientRect().bottom + 8 + 'px'; }).observe($('#bar'));

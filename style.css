@@ -81,6 +81,12 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 /* the name: Cinzel's Roman capitals (ET Book has no Ā), drawn as an outline in index.html */
 #name { color: var(--ink); line-height: 1; text-decoration: none; cursor: pointer; }
 #name svg { display: inline-block; vertical-align: -1px; }
+/* the tone switch: three words, the chosen one underlined */
+#tone { display: inline-flex; gap: 10px; font-size: 13px; }
+#tone button { all: unset; cursor: pointer; color: var(--quiet); padding-bottom: 1px; border-bottom: 1px solid transparent; }
+#tone button:hover { color: var(--ink); }
+#tone button[aria-pressed="true"] { color: var(--ink); border-bottom-color: var(--ink); }
+#tone button:focus-visible { outline: 1px solid var(--ink); outline-offset: 2px; }
 #hint { color: var(--quiet); font-style: italic; }
 #hint:empty { display: none; }
 
@@ -116,7 +122,7 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 .tag .scrap.word canvas:not(.sheet-bg) { margin: -2px 6px -2px -3px; }
 .tag .scrap.word[data-icon] { align-items: center; padding: 6px 12px 7px 11px; }
 /* who a share is for comes out from behind its icon (icons.js) */
-.tag .scrap.word canvas.sharemark { margin: -4px 4px -4px -5px; }
+.tag .scrap.word canvas.sharemark { margin: -2px 6px -2px -3px; }
 #pins { font-size: 12px; font-style: italic; color: var(--quiet); }
 #pins:empty { display: none; }
 
@@ -181,3 +187,12 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 .tag .scrap:hover > .sheet-bg, #nav .scrap:hover > .sheet-bg { filter: invert(1); }
 .tag .scrap:hover > canvas:not(.sheet-bg), #nav .scrap:hover > canvas:not(.sheet-bg) { filter: invert(1); }
 .tag .scrap.word:hover { color: #fff; }
+
+/* tone modes (tone.js): the inks are changed before drawing; the page round them follows here.
+   The filter on the initials also catches any colour the renderer adds of its own */
+[data-tone="gray"] { --paper: #eeeeee; }
+[data-tone="bw"] { --paper: #ffffff; }
+[data-tone="gray"] #paper, [data-tone="gray"] #album-paper { filter: grayscale(1); }
+[data-tone="bw"] #paper, [data-tone="bw"] #album-paper { background-image: none !important; }
+[data-tone="gray"] :is(#world .cap, #collection canvas, #album .one canvas, #sheet, #context canvas, .flying),
+[data-tone="bw"] :is(#world .cap, #collection canvas, #album .one canvas, #sheet, #context canvas, .flying) { filter: grayscale(1); }
