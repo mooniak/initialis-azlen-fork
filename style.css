@@ -3,9 +3,9 @@
 
 :root {
 	--paper: #f3efe6;
-	--sheet: #fbf8f1;
-	--ink: #2b2824;
-	--quiet: #857d70;
+	--sheet: #ffffff;
+	--ink: #000000;
+	--quiet: #6e6e6e;
 	--tile: 512px;
 }
 /* touch-action: a double tap is the page's own (more like this), never the browser's zoom */
@@ -37,7 +37,7 @@ button, a { font: inherit; }
 /* the lesson (lesson.js): a scrap with a printer's hand pointing where the thing happens. It never
    takes a click: the field under it stays live */
 /* the hand sits on the side of what it points at: right of the words, unless .left or .up */
-.lesson { position: absolute; z-index: 4; display: flex; flex-direction: row-reverse; align-items: center; gap: 9px; padding: 7px 10px 8px 14px; pointer-events: none; isolation: isolate; transform: rotate(var(--tilt, 0deg)); --from: 6px; animation: arrive .35s cubic-bezier(.25, .8, .3, 1) both; transition: opacity .25s ease; }
+.lesson { position: absolute; z-index: 4; display: flex; flex-direction: row-reverse; align-items: center; gap: 9px; padding: 7px 10px 8px 14px; pointer-events: none; isolation: isolate; --from: 6px; animation: arrive .35s cubic-bezier(.25, .8, .3, 1) both; transition: opacity .25s ease; }
 .lesson.fixed { position: fixed; z-index: 9; }
 .lesson.going { opacity: 0; }
 .lesson .hand { flex: none; animation: nudge .7s ease-in-out infinite alternate; }
@@ -68,7 +68,7 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 #corner { position: fixed; top: 0; right: 0; z-index: 12; width: 112px; height: 112px; overflow: hidden; pointer-events: none; }
 #corner a { position: absolute; left: 50%; top: 50%; width: 210px; height: 112px; margin: -112px 0 0 -105px; isolation: isolate; transform-origin: 50% 100%; transform: rotate(45deg); pointer-events: auto; }
 #corner a canvas:not(.sheet-bg) { position: absolute; left: 50%; bottom: 33px; transform: translate(-50%, 50%) rotate(-45deg); transition: transform .15s ease; }
-#corner a:hover canvas:not(.sheet-bg) { transform: translate(-50%, 50%) rotate(-45deg) scale(1.1); }
+#corner a:hover canvas:not(.sheet-bg) { transform: translate(-50%, 50%) rotate(-45deg) translateY(-1px); }
 @media (max-width: 560px) { #corner { transform: scale(.82); transform-origin: top right; } }
 /* the popover that stands in for title tooltips (tips.js): a scrap of paper, a few words */
 #tip { position: fixed; left: 0; top: 0; z-index: 60; max-width: min(280px, calc(100vw - 24px)); padding: 5px 11px 6px; isolation: isolate; pointer-events: none; font-size: 14px; font-style: italic; line-height: 1.25; color: var(--ink); opacity: 0; transition: opacity .1s ease; }
@@ -76,7 +76,7 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 /* text for screen readers and agents, off the page */
 .for-agents { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); white-space: nowrap; }
 
-/* the bar: a torn strip at the top */
+/* the bar: a flat strip at the top */
 #bar { position: fixed; left: 14px; top: calc(14px + env(safe-area-inset-top)); display: flex; flex-wrap: wrap; gap: 4px 16px; align-items: baseline; max-width: calc(100vw - 130px); box-sizing: border-box; padding: 8px 16px 9px; }
 /* the name: Cinzel's Roman capitals (ET Book has no Ā), drawn as an outline in index.html */
 #name { color: var(--ink); line-height: 1; text-decoration: none; cursor: pointer; }
@@ -86,11 +86,11 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 
 /* back and forward: two arrows on scraps of their own, under the name; faint when there's nowhere to go */
 #nav { position: fixed; left: 16px; top: calc(56px + env(safe-area-inset-top)); z-index: 12; display: flex; gap: 6px; }
-#nav .scrap { all: unset; position: relative; isolation: isolate; display: inline-flex; padding: 7px 9px; cursor: pointer; transform: rotate(var(--tilt, 0deg)); transition: transform .15s ease; }
+#nav .scrap { all: unset; position: relative; isolation: isolate; display: inline-flex; padding: 7px 9px; cursor: pointer; transition: transform .15s ease; }
 #nav .scrap canvas:not(.sheet-bg) { display: block; }
-#nav .scrap:hover { transform: rotate(0deg) translateY(-1px) scale(1.07); }
+#nav .scrap:hover { transform: translateY(-1px); }
 /* nowhere to go: the whole scrap ghosted, paper and all, and it takes no clicks */
-#nav .scrap.off { opacity: .28; pointer-events: none; transform: rotate(var(--tilt, 0deg)); }
+#nav .scrap.off { opacity: .28; pointer-events: none; }
 
 /* the tag under the chosen initial: each thing it does on its own scrap of paper, a little askew.
    Picked, its scraps come out from under it once its neighbours have leant away */
@@ -100,14 +100,14 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 @keyframes arrive { from { opacity: 0; transform: translateY(var(--from)); } }
 .tag .row { display: flex; align-items: center; gap: 5px; }
 .tag .space { width: 7px; }
-.tag .scrap { all: unset; position: relative; isolation: isolate; display: inline-flex; padding: 7px; cursor: pointer; transform: rotate(var(--tilt, 0deg)); transition: transform .15s ease; }
+.tag .scrap { all: unset; position: relative; isolation: isolate; display: inline-flex; padding: 7px; cursor: pointer; transition: transform .15s ease; }
 .tag .scrap.small { padding: 6px; }
-.tag .scrap:hover { transform: rotate(0deg) translateY(-1px) scale(1.07); }
+.tag .scrap:hover { transform: translateY(-1px); }
 .tag .scrap canvas:not(.sheet-bg) { display: block; }
 .tag .scrap.busy canvas:not(.sheet-bg) { opacity: .45; }
 .tag .scrap.busy { cursor: progress; }
 /* what a scrap has to say (link copied, how a download is going): a slip of paper under it */
-.tag .note { position: absolute; top: 100%; left: 50%; z-index: 2; translate: -50% 0; rotate: -1.2deg; margin-top: 7px; padding: 4px 11px 5px; isolation: isolate; font-size: 13.5px; font-style: italic; line-height: 1.2; color: var(--ink); white-space: nowrap; pointer-events: none; --from: -4px; animation: arrive .25s cubic-bezier(.25, .8, .3, 1) both; }
+.tag .note { position: absolute; top: 100%; left: 50%; z-index: 2; translate: -50% 0; margin-top: 7px; padding: 4px 11px 5px; isolation: isolate; font-size: 13.5px; font-style: italic; line-height: 1.2; color: var(--ink); white-space: nowrap; pointer-events: none; --from: -4px; animation: arrive .25s cubic-bezier(.25, .8, .3, 1) both; }
 /* the row above the initial: its notes go above it, clear of the initial */
 .tag.above .note { top: auto; bottom: 100%; margin: 0 0 7px; --from: 4px; }
 /* more like this says what it does, in words, unlike the icons */
@@ -124,7 +124,7 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 #collection { position: fixed; left: 50%; bottom: calc(14px + env(safe-area-inset-bottom)); transform: translateX(-50%); max-width: calc(100vw - 28px); box-sizing: border-box; display: flex; align-items: center; gap: 6px; padding: 4px 8px 4px 12px; transition: opacity .3s ease; }
 /* the bookmark: opens the collection's own page */
 #collection .mark { all: unset; flex: none; display: flex; padding: 4px 3px; cursor: pointer; transition: transform .15s ease; }
-#collection .mark:hover { transform: translateY(-1px) scale(1.1); }
+#collection .mark:hover { transform: translateY(-1px); }
 .album #collection { opacity: 0; pointer-events: none; }
 #collection .item.away { visibility: hidden; }
 
@@ -149,9 +149,9 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 #album .one { position: relative; aspect-ratio: 1; cursor: pointer; }
 #album .one canvas { display: block; width: 100%; height: 100%; transition: transform .15s ease; }
 #album .one:hover canvas { transform: translateY(-2px) scale(1.03); }
-#album .one button { all: unset; position: absolute; top: -10px; right: -8px; isolation: isolate; padding: 0 6px 2px; font-size: 18px; line-height: 1.1; color: var(--ink); opacity: 0; cursor: pointer; rotate: 5deg; transition: opacity .15s ease, scale .15s ease; }
+#album .one button { all: unset; position: absolute; top: -10px; right: -8px; isolation: isolate; padding: 0 6px 2px; font-size: 18px; line-height: 1.1; color: var(--ink); opacity: 0; cursor: pointer; transition: opacity .15s ease, scale .15s ease; }
 #album .one:hover button { opacity: 1; }
-#album .one button:hover { scale: 1.12; }
+#album .one button:hover { color: #fff; } #album .one button:hover .sheet-bg { filter: invert(1); }
 @media (hover: none) { #album .one button { opacity: 1; } }
 #collection .items { min-width: 0; overflow-x: auto; display: flex; align-items: center; gap: 4px; padding: 7px 7px 4px 2px; scrollbar-width: none; }
 #collection .item { position: relative; width: 56px; height: 56px; flex: none; cursor: pointer; }
@@ -160,8 +160,8 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 /* resting on one: download and share above it, and a scrap at its corner to let it go (app.js) */
 .tag.itemtag { position: fixed; z-index: 13; --from: 6px; }
 .tag.itemtag .scrap.small { padding: 5px; }
-.letgo { all: unset; position: fixed; z-index: 14; isolation: isolate; padding: 0 6px 2px; font-size: 17px; line-height: 1.1; color: var(--ink); cursor: pointer; rotate: 5deg; transition: scale .15s ease; }
-.letgo:hover { scale: 1.12; }
+.letgo { all: unset; position: fixed; z-index: 14; isolation: isolate; padding: 0 6px 2px; font-size: 17px; line-height: 1.1; color: var(--ink); cursor: pointer; transition: scale .15s ease; }
+.letgo:hover { color: #fff; } .letgo:hover .sheet-bg { filter: invert(1); }
 .flying { position: fixed; z-index: 50; pointer-events: none; transform-origin: 0 0; transition: transform .75s cubic-bezier(.3, .6, .2, 1); }
 
 /* in context: an aged sheet over the whole screen, the initial laid on it */
@@ -172,7 +172,12 @@ button.plain, #bar button, .tag button, .tag a { all: unset; cursor: pointer; co
 #bar, #collection { z-index: 12; }
 
 /* the flat page, for browsers without WebGPU */
-#context { position: fixed; inset: 0; padding: 16px; background: color-mix(in srgb, var(--paper) 88%, transparent); cursor: zoom-out; z-index: 20; }
-#context canvas { display: block; box-shadow: 0 1px 10px rgba(40, 30, 20, .18); }
+#context { position: fixed; inset: 0; padding: 16px; background: rgba(255, 255, 255, .92); cursor: zoom-out; z-index: 20; }
+#context canvas { display: block; outline: 1px solid #000; }
 #context p { margin: 0; color: var(--quiet); }
 
+
+/* minimal: hovering a control inverts it, black for white */
+.tag .scrap:hover > .sheet-bg, #nav .scrap:hover > .sheet-bg { filter: invert(1); }
+.tag .scrap:hover > canvas:not(.sheet-bg), #nav .scrap:hover > canvas:not(.sheet-bg) { filter: invert(1); }
+.tag .scrap.word:hover { color: #fff; }

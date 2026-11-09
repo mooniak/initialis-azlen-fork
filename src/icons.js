@@ -1,6 +1,5 @@
-// Icons for the tag, inked by hand: each a few solid shapes on a 64-unit square, drawn with a
-// wobbling hand (outlines resampled and pushed about by smooth noise, so no edge is ruled) and a
-// few starved specks where the ink didn't take. Knock-outs (cut) are paper showing through.
+// Icons for the tag: each a few solid black shapes on a 64-unit square, drawn clean.
+// Knock-outs (cut) are paper showing through.
 //   edit     a pencil
 //   save     a bookmark ribbon in outline; saved, the same filled
 //   context  a page: a square initial (an I cut in it), lines beside it and on under it, ragged
@@ -11,9 +10,7 @@
 //   look     a square, arrows pushing out from its corners: see it large
 //   point    a manicule (☞), EB Garamond's, its white inside inked: a solid hand, white between the fingers
 //   person   who a link can go to, peering out from behind share (drawShare)
-//   github   GitHub's mark, traced and inked by the same hand
-
-import { rng, makeNoise } from '../render/src/util.js?v=a8136959';
+//   github   GitHub's mark, traced
 
 const rect = (x0, y0, x1, y1, r = 0.8) => {
 	const pts = [], q = Math.min(r, (x1 - x0) / 2, (y1 - y0) / 2);
@@ -74,31 +71,15 @@ export const ICONS = {
 	],
 };
 
-// a closed outline resampled and pushed about by the hand's noise
-function hand(pts, n, open = false) {
-	const out = [];
-	const m = open ? pts.length - 1 : pts.length;
-	for (let i = 0; i < m; i++) {
-		const a = pts[i], b = pts[(i + 1) % pts.length], len = Math.hypot(b[0] - a[0], b[1] - a[1]), k = Math.max(1, Math.ceil(len / 1.6));
-		for (let j = 0; j < k; j++) out.push([a[0] + (b[0] - a[0]) * j / k, a[1] + (b[1] - a[1]) * j / k]);
-	}
-	if (open) out.push(pts[pts.length - 1]);
-	return out.map(([x, y]) => [
-		x + 0.85 * n(x / 11, y / 11) + 0.3 * n(x / 2.1 + 40, y / 2.1),
-		y + 0.85 * n(x / 11 + 17, y / 11 + 9) + 0.3 * n(x / 2.1 + 71, y / 2.1 + 23),
-	]);
-}
-
-export function drawIcon(name, css, { color = '#2b2824', seed = 1, dpr = Math.min(2, devicePixelRatio || 1) } = {}) {
+export function drawIcon(name, css, { color = '#000', seed = 1, dpr = Math.min(2, devicePixelRatio || 1) } = {}) {
 	const cv = document.createElement('canvas');
 	cv.width = cv.height = Math.round(css * dpr);
 	cv.style.width = cv.style.height = css + 'px';
 	const x = cv.getContext('2d');
 	x.scale(cv.width / 64, cv.height / 64);
-	const n = makeNoise(seed * 7 + name.length), r = rng(seed * 13 + name.charCodeAt(0));
 	const shapes = ICONS[name];
 	const draw = (s) => {
-		const pts = hand(s.pts, n, s.open);
+		const pts = s.pts; // drawn clean, without the wobbling hand
 		const p = new Path2D();
 		pts.forEach(([px, py], i) => i ? p.lineTo(px, py) : p.moveTo(px, py));
 		if (s.open) { x.lineWidth = s.w; x.lineCap = 'round'; x.lineJoin = 'round'; x.stroke(p); }
@@ -108,8 +89,6 @@ export function drawIcon(name, css, { color = '#2b2824', seed = 1, dpr = Math.mi
 	for (const s of shapes) if (!s.cut) draw(s);
 	x.globalCompositeOperation = 'destination-out';
 	for (const s of shapes) if (s.cut) draw(s);
-	// specks where the ink didn't take
-	for (let i = 0; i < 7; i++) { x.beginPath(); x.arc(8 + r() * 48, 8 + r() * 48, 0.35 + r() * 0.55, 0, Math.PI * 2); x.fill(); }
 	x.globalCompositeOperation = 'source-over';
 	return cv;
 }
@@ -117,7 +96,7 @@ export function drawIcon(name, css, { color = '#2b2824', seed = 1, dpr = Math.mi
 // share: its tray in front, and who a link can go to coming out from behind it, a person on one side
 // and Claude on the other. (The Claude mark is Anthropic's, its path from Simple Icons, drawn as it is.)
 const CLAUDE = 'm4.7144 15.9555 4.7174-2.6471.079-.2307-.079-.1275h-.2307l-.7893-.0486-2.6956-.0729-2.3375-.0971-2.2646-.1214-.5707-.1215-.5343-.7042.0546-.3522.4797-.3218.686.0608 1.5179.1032 2.2767.1578 1.6514.0972 2.4468.255h.3886l.0546-.1579-.1336-.0971-.1032-.0972L6.973 9.8356l-2.55-1.6879-1.3356-.9714-.7225-.4918-.3643-.4614-.1578-1.0078.6557-.7225.8803.0607.2246.0607.8925.686 1.9064 1.4754 2.4893 1.8336.3643.3035.1457-.1032.0182-.0728-.164-.2733-1.3539-2.4467-1.445-2.4893-.6435-1.032-.17-.6194c-.0607-.255-.1032-.4674-.1032-.7285L6.287.1335 6.6997 0l.9957.1336.419.3642.6192 1.4147 1.0018 2.2282 1.5543 3.0296.4553.8985.2429.8318.091.255h.1579v-.1457l.1275-1.706.2368-2.0947.2307-2.6957.0789-.7589.3764-.9107.7468-.4918.5828.2793.4797.686-.0668.4433-.2853 1.8517-.5586 2.9021-.3643 1.9429h.2125l.2429-.2429.9835-1.3053 1.6514-2.0643.7286-.8196.85-.9046.5464-.4311h1.0321l.759 1.1293-.34 1.1657-1.0625 1.3478-.8804 1.1414-1.2628 1.7-.7893 1.36.0729.1093.1882-.0183 2.8535-.607 1.5421-.2794 1.8396-.3157.8318.3886.091.3946-.3278.8075-1.967.4857-2.3072.4614-3.4364.8136-.0425.0304.0486.0607 1.5482.1457.6618.0364h1.621l3.0175.2247.7892.522.4736.6376-.079.4857-1.2142.6193-1.6393-.3886-3.825-.9107-1.3113-.3279h-.1822v.1093l1.0929 1.0686 2.0035 1.8092 2.5075 2.3314.1275.5768-.3218.4554-.34-.0486-2.2039-1.6575-.85-.7468-1.9246-1.621h-.1275v.17l.4432.6496 2.3436 3.5214.1214 1.0807-.17.3521-.6071.2125-.6679-.1214-1.3721-1.9246L14.38 17.959l-1.1414-1.9428-.1397.079-.674 7.2552-.3156.3703-.7286.2793-.6071-.4614-.3218-.7468.3218-1.4753.3886-1.9246.3157-1.53.2853-1.9004.17-.6314-.0121-.0425-.1397.0182-1.4328 1.9672-2.1796 2.9446-1.7243 1.8456-.4128.164-.7164-.3704.0667-.6618.4008-.5889 2.386-3.0357 1.4389-1.882.929-1.0868-.0062-.1579h-.0546l-6.3385 4.1164-1.1293.1457-.4857-.4554.0608-.7467.2307-.2429 1.9064-1.3114Z';
-export function drawShare(css, { color = '#2b2824', mark = '#a94f17', dpr = Math.min(2, devicePixelRatio || 1) } = {}) {
+export function drawShare(css, { color = '#000', mark = '#000', dpr = Math.min(2, devicePixelRatio || 1) } = {}) {
 	const W = css * 2.3, H = css * 1.25, m = css * 0.84, gap = css * 0.07;
 	const cv = document.createElement('canvas');
 	cv.width = Math.round(W * dpr);

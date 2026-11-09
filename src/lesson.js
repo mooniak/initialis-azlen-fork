@@ -85,7 +85,6 @@ export function lesson(app) {
 	function show(s) {
 		const el = document.createElement('div');
 		el.className = 'lesson' + (s.fixed ? ' fixed' : '') + (s.dir ? ' ' + s.dir : '');
-		el.style.setProperty('--tilt', (s.id.length % 3 - 1) * 0.9 + 'deg');
 		const hand = drawIcon('point', 34, { seed: 3 });
 		hand.className = 'hand';
 		const say = document.createElement('span');
@@ -96,7 +95,7 @@ export function lesson(app) {
 		if (s.fine) say.querySelector('.fine').textContent = s.fine;
 		el.append(hand, say);
 		(s.fixed ? document.body : app.world).append(el);
-		paperize(el, { color: '#fbf8f1', edges: { top: 'torn', right: 'deckle', bottom: 'torn', left: 'torn' }, seed: 80 + s.id.length, fibres: 0.4 });
+		paperize(el, { color: '#ffffff', edges: { top: 'torn', right: 'deckle', bottom: 'torn', left: 'torn' }, seed: 80 + s.id.length, fibres: 0.4 });
 		shown = { step: s, el, at: performance.now(), pick: app.picked() };
 		if (!s.place(el)) { el.remove(); shown = null; return; }
 		if (s.tag) lastTag = shown.pick;

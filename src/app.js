@@ -899,7 +899,7 @@ function pick(c) {
 }
 
 // the tag's hand-inked icons (icons.js), redrawn in another ink when their state changes
-const INK = '#2b2824';
+const INK = '#000';
 function icon(el, name, color) {
 	const size = el.closest('.small') || el.classList.contains('word') ? 18 : 24;
 	const cv = drawIcon(name, size, { color, seed: name.length * 3 + 1 });
@@ -907,8 +907,8 @@ function icon(el, name, color) {
 	const old = el.querySelector('canvas:not(.sheet-bg)');
 	if (old) old.replaceWith(cv); else el.prepend(cv);
 }
-// share is on orange construction paper
-const SHARE_PAPER = '#ec7f35';
+// share is on the same white sheet as the rest
+const SHARE_PAPER = '#ffffff';
 const isShare = el => el.dataset.icon === 'share';
 
 // the picked initial's tag: save and more like this under it, everything else it can do in a row
@@ -1019,7 +1019,7 @@ letGo.className = 'letgo';
 letGo.textContent = '×';
 letGo.setAttribute('aria-label', 'let it go');
 document.body.append(itemTag, letGo);
-paperize(letGo, { color: '#fbf8f1', edges: { top: 'torn', right: 'torn', bottom: 'torn', left: 'torn' }, seed: 41, fibres: 0.3 });
+paperize(letGo, { color: '#ffffff', edges: { top: 'torn', right: 'torn', bottom: 'torn', left: 'torn' }, seed: 41, fibres: 0.3 });
 let itemOf = null, itemHide = 0;
 function showItemTag(item, P) {
 	if (itemTag.querySelector('.busy')) return;
@@ -1136,7 +1136,7 @@ function fillAlbum() {
 			one.append(x);
 		}
 		grid.append(one);
-		if (mine) paperize(one.querySelector('button'), { color: '#fbf8f1', edges: { top: 'torn', right: 'torn', bottom: 'torn', left: 'torn' }, seed: 41 + grid.children.length, fibres: 0.3 });
+		if (mine) paperize(one.querySelector('button'), { color: '#ffffff', edges: { top: 'torn', right: 'torn', bottom: 'torn', left: 'torn' }, seed: 41 + grid.children.length, fibres: 0.3 });
 		return [one, cv, P];
 	});
 	if (mine) spreadOut();
@@ -1367,7 +1367,7 @@ function say(btn) {
 	return t => {
 		words.textContent = t;
 		n.hidden = !t;
-		if (t && !n.paper) n.paper = paperize(n, { color: '#fbf8f1', edges: { top: 'torn', right: 'torn', bottom: 'torn', left: 'deckle' }, seed: 93 + btn.id.length, fibres: 0.3 });
+		if (t && !n.paper) n.paper = paperize(n, { color: '#ffffff', edges: { top: 'torn', right: 'torn', bottom: 'torn', left: 'deckle' }, seed: 93 + btn.id.length, fibres: 0.3 });
 	};
 }
 
@@ -1735,26 +1735,24 @@ async function boot() {
 	if (g.root) { const [rx, ry] = pos(g.root.q, g.root.r); startWave(rx, ry); } else startWave();
 	painters = new Painters(poolSize(), next);
 	world.append(tools, tag);
-	paperize($('#bar'), { color: '#fbf8f1', edges: { top: 'cut', right: 'torn', bottom: 'torn', left: 'cut' }, seed: 11 });
+	paperize($('#bar'), { color: '#ffffff', edges: { top: 'cut', right: 'torn', bottom: 'torn', left: 'cut' }, seed: 11 });
 	// the arrows stay under the name, however tall what's in the bar makes it
 	new ResizeObserver(() => { $('#nav').style.top = $('#bar').getBoundingClientRect().bottom + 8 + 'px'; }).observe($('#bar'));
 	// each thing the tag does on its own scrap, a little askew
 	document.querySelectorAll('.tag .scrap').forEach((el, i) => {
 		if (el.dataset.icon) icon(el, el.dataset.icon, INK);
 		if (isShare(el) && el.classList.contains('word')) el.querySelector('canvas:not(.sheet-bg)').replaceWith(drawShare(18, { color: INK }));
-		el.style.setProperty('--tilt', ((hash(i, 'tilt') % 9) - 4) * 0.8 + 'deg');
 		const edges = ['torn', 'deckle', 'torn', 'torn'];
-		scrapPapers.push([el, paperize(el, { color: isShare(el) ? SHARE_PAPER : i % 3 === 1 ? '#f7f1e3' : '#fbf8f1', edges: { top: edges[i % 4], right: edges[(i + 1) % 4], bottom: edges[(i + 2) % 4], left: edges[(i + 3) % 4] }, seed: 60 + i, fibres: 0.4 })]);
+		scrapPapers.push([el, paperize(el, { color: isShare(el) ? SHARE_PAPER : '#ffffff', edges: { top: edges[i % 4], right: edges[(i + 1) % 4], bottom: edges[(i + 2) % 4], left: edges[(i + 3) % 4] }, seed: 60 + i, fibres: 0.4 })]);
 	});
 	document.querySelectorAll('#nav .scrap').forEach((el, i) => {
 		icon(el, el.dataset.icon, INK);
-		el.style.setProperty('--tilt', (i ? 1.4 : -1.1) + 'deg');
-		paperize(el, { color: '#fbf8f1', edges: { top: 'torn', right: i ? 'deckle' : 'torn', bottom: 'torn', left: i ? 'torn' : 'deckle' }, seed: 70 + i, fibres: 0.4 });
+		paperize(el, { color: '#ffffff', edges: { top: 'torn', right: i ? 'deckle' : 'torn', bottom: 'torn', left: i ? 'torn' : 'deckle' }, seed: 70 + i, fibres: 0.4 });
 	});
-	paperize($('#collection'), { color: '#f8f4ea', edges: { top: 'torn', right: 'torn', bottom: 'cut', left: 'torn' }, seed: 37 });
-	$('#collection .mark').append(drawIcon('saved', 25, { color: '#857d70', seed: 5 }));
-	paperize($('#corner a'), { color: '#1f1c1a', edges: { top: 'cut', right: 'cut', bottom: 'torn', left: 'cut' }, seed: 83, fibres: 0.7 });
-	$('#corner a').append(drawIcon('github', 30, { color: '#f6f1e7', seed: 9 }));
+	paperize($('#collection'), { color: '#ffffff', edges: { top: 'torn', right: 'torn', bottom: 'cut', left: 'torn' }, seed: 37 });
+	$('#collection .mark').append(drawIcon('saved', 25, { color: '#000', seed: 5 }));
+	paperize($('#corner a'), { color: '#000000', edges: { top: 'cut', right: 'cut', bottom: 'torn', left: 'cut' }, seed: 83, fibres: 0.7 });
+	$('#corner a').append(drawIcon('github', 30, { color: '#fff', seed: 9 }));
 	if (!NO_GL) teach = lesson({ store, world, aim, picked: () => picked, saved: () => saved.length, quiet: () => !!albumOf,
 		// the picked initial to the middle, if it or its scraps are partly off screen
 		centre: () => {

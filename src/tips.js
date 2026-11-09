@@ -24,7 +24,7 @@ function show(el) {
 	if (!el.isConnected || !el.dataset.tip) return;
 	words.textContent = el.dataset.tip;
 	tip.classList.add('on');
-	if (!paper) paper = paperize(tip, { color: '#fbf8f1', edges: { top: 'torn', right: 'torn', bottom: 'torn', left: 'deckle' }, seed: 91, fibres: 0.3 });
+	if (!paper) paper = paperize(tip, { color: '#ffffff', edges: { top: 'torn', right: 'torn', bottom: 'torn', left: 'deckle' }, seed: 91, fibres: 0.3 });
 	place(el);
 }
 function hide() {
